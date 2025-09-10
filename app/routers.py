@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlmodel import Session
 from typing import List
 
 from app.database import get_session
 from app.schemas import TaskCreateSchema, TaskReadSchema
-from app.crud import create_task, get_tasks
+from app.crud import create_task, get_tasks, get_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -21,3 +21,12 @@ def api_create_task(task_in: TaskCreateSchema, session: Session = Depends(get_se
 def api_get_tasks(session: Session = Depends(get_session)):
     tasks = get_tasks(session)
     return tasks
+
+
+# Get task by ID
+@router.get("/{task_id}", response_model=TaskReadSchema)
+def api_get_task(task_id: int, session: Session = Depends(get_session)):
+    task = get_task(session, task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
