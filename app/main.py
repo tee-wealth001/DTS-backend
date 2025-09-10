@@ -1,15 +1,12 @@
-# app/main.py
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from app.routers import router
 from app.database import init_db
+from contextlib import asynccontextmanager
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    print("🚀 Starting HMCTS Case Management backend...")
-    init_db()
-
+    init_db()  # ensure DB & tables exist
     yield
 
     # Shutdown
@@ -22,3 +19,8 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(router)
