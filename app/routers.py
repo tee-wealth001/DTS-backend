@@ -3,8 +3,8 @@ from sqlmodel import Session
 from typing import List
 
 from app.database import get_session
-from app.schemas import TaskCreateSchema, TaskReadSchema
-from app.crud import create_task, get_tasks, get_task
+from app.schemas import TaskCreateSchema, TaskReadSchema, TaskUpdateSchema
+from app.crud import create_task, get_tasks, get_task, update_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -27,6 +27,17 @@ def api_get_tasks(session: Session = Depends(get_session)):
 @router.get("/{task_id}", response_model=TaskReadSchema)
 def api_get_task(task_id: int, session: Session = Depends(get_session)):
     task = get_task(session, task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
+# Update task
+@router.patch("/{task_id}", response_model=TaskReadSchema)
+def api_update_task(
+    task_id: int, task_in: TaskUpdateSchema, session: Session = Depends(get_session)
+):
+    task = update_task(session, task_id, task_in)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
