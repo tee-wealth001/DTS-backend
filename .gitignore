@@ -1,0 +1,44 @@
+# ---- Python / FastAPI ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.log
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# SQLite database
+*.db
+*.sqlite3
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test / Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ---- Node / Angular ----
+node_modules/
+dist/
+tmp/
+out-tsc/
+coverage/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
