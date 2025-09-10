@@ -4,7 +4,7 @@ from typing import List
 
 from app.database import get_session
 from app.schemas import TaskCreateSchema, TaskReadSchema, TaskUpdateSchema
-from app.crud import create_task, get_tasks, get_task, update_task
+from app.crud import create_task, get_tasks, get_task, update_task, delete_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -41,3 +41,12 @@ def api_update_task(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
+
+
+# Delete task
+@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def api_delete_task(task_id: int, session: Session = Depends(get_session)):
+    success = delete_task(session, task_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return

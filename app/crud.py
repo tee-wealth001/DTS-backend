@@ -36,3 +36,13 @@ def update_task(
     session.commit()
     session.refresh(task)
     return task
+
+
+# Delete
+def delete_task(session: Session, task_id: int) -> bool:
+    task = session.get(Task, task_id)
+    if not task:
+        return False
+    session.delete(task)
+    session.commit()
+    return True
