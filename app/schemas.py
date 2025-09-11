@@ -1,6 +1,6 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.enums import StatusEnum, PriorityEnum
 
@@ -8,11 +8,19 @@ from app.enums import StatusEnum, PriorityEnum
 class TaskBaseSchema(BaseModel):
     title: str
     description: Optional[str] = None
-    status: Optional[str] = StatusEnum.todo
+    status: str = Field(
+        default=StatusEnum.todo, description="todo | in progress | completed"
+    )
     due_at: Optional[datetime] = None
-    case_id: Optional[int] = None
-    assigned_to: Optional[str] = None
-    priority: Optional[str] = PriorityEnum.low
+
+    # Case management–specific fields
+    case_id: Optional[int] = Field(default=None, description="Related case identifier")
+    assigned_to: Optional[str] = Field(
+        default=None, description="Caseworker username or ID"
+    )
+    priority: Optional[str] = Field(
+        default=PriorityEnum.low, description="low | medium | high"
+    )
 
 
 class TaskCreateSchema(TaskBaseSchema):

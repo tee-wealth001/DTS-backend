@@ -10,7 +10,14 @@ router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 # Create a task
-@router.post("/", response_model=TaskReadSchema, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    tags=["Tasks"],
+    response_model=TaskReadSchema,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new task",
+    description="Create a new task with a title, description, status, priority, and assigned user.",
+)
 async def api_create_task(
     task_in: TaskCreateSchema, session: AsyncSession = Depends(get_async_session)
 ):
@@ -18,13 +25,25 @@ async def api_create_task(
 
 
 # Get all tasks
-@router.get("/", response_model=List[TaskReadSchema])
+@router.get(
+    "/",
+    tags=["Tasks"],
+    response_model=List[TaskReadSchema],
+    summary="Get all tasks",
+    description="Retrieve a list of all tasks in the system.",
+)
 async def api_get_tasks(session: AsyncSession = Depends(get_async_session)):
     return await get_tasks(session)
 
 
 # Get task by ID
-@router.get("/{task_id}", response_model=TaskReadSchema)
+@router.get(
+    "/{task_id}",
+    tags=["Tasks"],
+    response_model=TaskReadSchema,
+    summary="Get a task by ID",
+    description="Retrieve a single task by its unique ID.",
+)
 async def api_get_task(
     task_id: int, session: AsyncSession = Depends(get_async_session)
 ):
@@ -35,7 +54,13 @@ async def api_get_task(
 
 
 # Update task (PATCH)
-@router.patch("/{task_id}", response_model=TaskReadSchema)
+@router.patch(
+    "/{task_id}",
+    tags=["Tasks"],
+    response_model=TaskReadSchema,
+    summary="Partially update a task",
+    description="Update specific fields of a task by its ID.",
+)
 async def api_update_task(
     task_id: int,
     task_in: TaskUpdateSchema,
@@ -48,7 +73,13 @@ async def api_update_task(
 
 
 # Update task (PUT)
-@router.put("/{task_id}", response_model=TaskReadSchema)
+@router.put(
+    "/{task_id}",
+    tags=["Tasks"],
+    response_model=TaskReadSchema,
+    summary="Fully update a task",
+    description="Replace a task with new values for all fields.",
+)
 async def api_update_task_put(
     task_id: int,
     task_in: TaskUpdateSchema,
@@ -61,7 +92,13 @@ async def api_update_task_put(
 
 
 # Delete task
-@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{task_id}",
+    tags=["Tasks"],
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a task",
+    description="Delete a task by its ID. Returns 204 No Content on success.",
+)
 async def api_delete_task(
     task_id: int, session: AsyncSession = Depends(get_async_session)
 ):
