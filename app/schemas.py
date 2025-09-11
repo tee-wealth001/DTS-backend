@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
-from enums import StatusEnum, PriorityEnum
+from app.enums import StatusEnum, PriorityEnum
 
 
 class TaskBaseSchema(BaseModel):
