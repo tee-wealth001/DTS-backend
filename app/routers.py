@@ -4,7 +4,14 @@ from typing import List
 
 from app.database import get_async_session
 from app.schemas import TaskCreateSchema, TaskReadSchema, TaskUpdateSchema
-from app.crud import create_task, get_tasks, get_task, update_task, delete_task
+from app.crud import (
+    create_task,
+    get_tasks,
+    get_task,
+    update_task,
+    delete_task,
+    patch_task,
+)
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -61,12 +68,12 @@ async def api_get_task(
     summary="Partially update a task",
     description="Update specific fields of a task by its ID.",
 )
-async def api_update_task(
+async def api_patch_task(
     task_id: int,
     task_in: TaskUpdateSchema,
     session: AsyncSession = Depends(get_async_session),
 ):
-    task = await update_task(session, task_id, task_in)
+    task = await patch_task(session, task_id, task_in)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
@@ -80,7 +87,7 @@ async def api_update_task(
     summary="Fully update a task",
     description="Replace a task with new values for all fields.",
 )
-async def api_update_task_put(
+async def api_update_task(
     task_id: int,
     task_in: TaskUpdateSchema,
     session: AsyncSession = Depends(get_async_session),

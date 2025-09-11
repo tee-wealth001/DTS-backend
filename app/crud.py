@@ -21,7 +21,7 @@ async def get_task(session: AsyncSession, task_id: int) -> Task | None:
 # Read all
 async def get_tasks(session: AsyncSession) -> list[Task]:
     result = await session.exec(select(Task))
-    return result.all() # type: ignore
+    return result.all()  # type: ignore
 
 
 # Update
@@ -37,6 +37,26 @@ async def update_task(
     session.add(task)
     await session.commit()
     await session.refresh(task)
+    return task
+
+
+# patch
+async def patch_task(
+    session: AsyncSession, task_id: int, task_in: TaskUpdateSchema
+) -> Task | None:
+    task = await session.get(Task, task_id)
+    if not task:
+        return None
+
+    # Only update fields that are actually set
+    update_data = task_in.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(task, key, value)
+
+    session.add(task)
+    await session.commit()
+    await session.refresh(task)
+
     return task
 
 
