@@ -1,6 +1,6 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.enums import StatusEnum, PriorityEnum
 
@@ -32,5 +32,4 @@ class TaskUpdateSchema(BaseModel):
 class TaskReadSchema(TaskBaseSchema):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
