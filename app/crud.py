@@ -1,48 +1,50 @@
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 from app.models import Task
 from app.schemas import TaskCreateSchema, TaskUpdateSchema
 
 
 # Create
-def create_task(session: Session, task_in: TaskCreateSchema) -> Task:
-    task = Task.model_validate(task_in)  # map schema -> model
+async def create_task(session: AsyncSession, task_in: TaskCreateSchema) -> Task:
+    task = Task.model_validate(task_in)
     session.add(task)
-    session.commit()
-    session.refresh(task)
+    await session.commit()
+    await session.refresh(task)
     return task
 
 
 # Read by ID
-def get_task(session: Session, task_id: int) -> Task | None:
-    return session.get(Task, task_id)
+async def get_task(session: AsyncSession, task_id: int) -> Task | None:
+    return await session.get(Task, task_id)
 
 
 # Read all
-def get_tasks(session: Session) -> list[Task]:
-    return session.exec(select(Task)).all()  # type: ignore
+async def get_tasks(session: AsyncSession) -> list[Task]:
+    result = await session.exec(select(Task))
+    return result.all() # type: ignore
 
 
 # Update
-def update_task(
-    session: Session, task_id: int, task_in: TaskUpdateSchema
+async def update_task(
+    session: AsyncSession, task_id: int, task_in: TaskUpdateSchema
 ) -> Task | None:
-    task = session.get(Task, task_id)
+    task = await session.get(Task, task_id)
     if not task:
         return None
     update_data = task_in.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(task, key, value)
     session.add(task)
-    session.commit()
-    session.refresh(task)
+    await session.commit()
+    await session.refresh(task)
     return task
 
 
 # Delete
-def delete_task(session: Session, task_id: int) -> bool:
-    task = session.get(Task, task_id)
+async def delete_task(session: AsyncSession, task_id: int) -> bool:
+    task = await session.get(Task, task_id)
     if not task:
         return False
-    session.delete(task)
-    session.commit()
+    await session.delete(task)
+    await session.commit()
     return True
