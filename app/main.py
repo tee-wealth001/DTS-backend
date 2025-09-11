@@ -10,12 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 async def lifespan(app: FastAPI):
     # Ensure DB & tables exist
     await init_db()
-    print("✅ Database initialized")
+    print("||||||||||||||| Database initialized |||||||||||||||")
 
     yield
 
     # Shutdown actions
-    print("🛑 Shutting down HMCTS Case Management backend...")
+    print("||||||||||||||| Shutting down HMCTS Case Management backend |||||||||||||||")
 
 
 # FastAPI app
