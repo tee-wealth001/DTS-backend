@@ -43,6 +43,17 @@ def api_update_task(
     return task
 
 
+# Add PUT endpoint for complete updates
+@router.put("/{task_id}", response_model=TaskReadSchema)
+def api_update_task_put(
+    task_id: int, task_in: TaskUpdateSchema, session: Session = Depends(get_session)
+):
+    task = update_task(session, task_id, task_in)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
 # Delete task
 @router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def api_delete_task(task_id: int, session: Session = Depends(get_session)):
