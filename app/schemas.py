@@ -2,15 +2,17 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
+from enums import StatusEnum, PriorityEnum
+
 
 class TaskBaseSchema(BaseModel):
     title: str
     description: Optional[str] = None
-    status: Optional[str] = "todo"  # todo | in_progress | done
+    status: Optional[str] = StatusEnum.todo
     due_at: Optional[datetime] = None
     case_id: Optional[int] = None
     assigned_to: Optional[str] = None
-    priority: Optional[str] = "medium"  # low | medium | high
+    priority: Optional[str] = PriorityEnum.low
 
 
 class TaskCreateSchema(TaskBaseSchema):

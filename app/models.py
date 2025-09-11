@@ -2,11 +2,15 @@ from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Field
 
+from enums import StatusEnum, PriorityEnum
+
 
 class TaskBase(SQLModel):
     title: str
     description: Optional[str] = None
-    status: str = Field(default="todo", description="todo | in_progress | done")
+    status: str = Field(
+        default=StatusEnum.todo, description="todo | in progress | completed"
+    )
     due_at: Optional[datetime] = None
 
     # Case management–specific fields
@@ -14,7 +18,9 @@ class TaskBase(SQLModel):
     assigned_to: Optional[str] = Field(
         default=None, description="Caseworker username or ID"
     )
-    priority: Optional[str] = Field(default="medium", description="low | medium | high")
+    priority: Optional[str] = Field(
+        default=PriorityEnum.low, description="low | medium | high"
+    )
 
 
 class Task(TaskBase, table=True):
